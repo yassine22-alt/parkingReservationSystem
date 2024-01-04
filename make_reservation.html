@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Make Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .reservation-form {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"] {
+            width: calc(100% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: purple;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reservation-form">
+        <h2>Make Reservation</h2>
+        <form action="process_reservation.php" method="POST" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="spotNumber">Spot Number:</label>
+                <input type="text" id="spotNumber" name="spotNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="entryDate">Entry Date:</label>
+                <input type="date" id="entryDate" name="entryDate" required>
+            </div>
+            <div class="form-group">
+                <label for="entryTime">Entry Time:</label>
+                <input type="time" id="entryTime" name="entryTime" required>
+            </div>
+            <div class="form-group">
+                <label for="quittingDate">Quitting Date:</label>
+                <input type="date" id="quittingDate" name="quittingDate" required>
+            </div>
+            <div class="form-group">
+                <label for="quittingTime">Quitting Time:</label>
+                <input type="time" id="quittingTime" name="quittingTime" required>
+            </div>
+            <input type="submit" value="Reserve">
+        </form>
+    </div>
+
+    <script>
+    //  function to assure date and spot number validation
+        function validateForm() {
+            var entryDate = new Date(document.getElementById("entryDate").value);
+            var entryTime = document.getElementById("entryTime").value;
+            var quittingDate = new Date(document.getElementById("quittingDate").value);
+            var quittingTime = document.getElementById("quittingTime").value;
+            var spotNo = document.getElementById('spotNumber').value;
+            var entryDateTime = new Date(entryDate.toDateString() + ' ' + entryTime);
+            var quittingDateTime = new Date(quittingDate.toDateString() + ' ' + quittingTime);
+            
+            var currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0); 
+
+            if (entryDate < currentDate) {
+                alert("Entry date should be in the future.");
+                return false;
+            }
+            if (quittingDate < entryDate) {
+                alert("Quitting date should come after entry date.");
+                return false;
+            }
+            if (
+                quittingDate.toDateString() === entryDate.toDateString() &&
+                quittingDateTime <= entryDateTime
+            ) {
+                alert("Quitting date should come after entry date.");
+                return false;
+            } 
+            if (
+                quittingDate.toDateString() === entryDate.toDateString() &&
+                quittingDateTime > entryDateTime
+            ) {
+                return true;
+            } 
+            if (spotNo > 100) {
+                alert("Parking has 100 spots only")
+                return false;
+            }
+            return true;
+        
+        }
+    </script>
+</body>
+
+</html>
